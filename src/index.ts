@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 const RE_YOUTUBE =
   /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
 const USER_AGENT =
@@ -49,6 +51,7 @@ export class YoutubeTranscriptNotAvailableLanguageError extends YoutubeTranscrip
 
 export interface TranscriptConfig {
   lang?: string;
+  agent?: any;
 }
 export interface TranscriptResponse {
   text: string;
@@ -74,6 +77,7 @@ export class YoutubeTranscript {
     const videoPageResponse = await fetch(
       `https://www.youtube.com/watch?v=${identifier}`,
       {
+        agent: config?.agent,
         headers: {
           ...(config?.lang && { 'Accept-Language': config.lang }),
           'User-Agent': USER_AGENT,
@@ -137,6 +141,7 @@ export class YoutubeTranscript {
       headers: {
         ...(config?.lang && { 'Accept-Language': config.lang }),
         'User-Agent': USER_AGENT,
+        agent: config?.agent,
       },
     });
     if (!transcriptResponse.ok) {
